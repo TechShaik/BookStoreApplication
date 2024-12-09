@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 import com.Files.UserEntity.User;
-import com.Files.UserEntity.DTOs.UserRequsetDTO;
+import com.Files.UserEntity.DTOs.LoginRequestDto;
+ import com.Files.UserEntity.DTOs.UserRequsetDTO;
 import com.Files.UserEntity.DTOs.UserResponseDTO;
 
 @Component
@@ -32,4 +33,7 @@ public class Mapper {
 		user.setUser_reg_date(LocalDate.now());
  		return user;
 	}
+	
+	
+	 
 }

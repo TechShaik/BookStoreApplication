@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Files.UserEntity.User;
 import com.Files.UserEntity.DTOs.ChangePassword;
-import com.Files.UserEntity.DTOs.UserRequsetDTO;
+import com.Files.UserEntity.DTOs.LoginRequestDto;
+ import com.Files.UserEntity.DTOs.UserRequsetDTO;
 import com.Files.UserEntity.DTOs.UserResponseDTO;
 import com.Files.UserEntity.ExceptionHandling.UserNotFoundException;
 import com.Files.UserEntity.Service.JwtService;
@@ -65,12 +66,22 @@ public class UserController {
 	}
 
 
+//	@PostMapping("/login")
+//	public String generateToken(@RequestParam String username, @RequestParam String password) {
+//		Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+//		if(authenticate.isAuthenticated()) {	
+//			System.out.println(jwtService.generateToken(username));
+//			return jwtService.generateToken(username);
+//		}else {
+//			throw new RuntimeException("Invalid user");
+//		}
+//	}
+	
 	@PostMapping("/login")
-	public String generateToken(@RequestParam String username, @RequestParam String password) {
-		Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+	public String generateToken(@RequestBody LoginRequestDto loginRequestDto) {
+		Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(),loginRequestDto.getUser_password()));
 		if(authenticate.isAuthenticated()) {	
-			System.out.println(jwtService.generateToken(username));
-			return jwtService.generateToken(username);
+ 			return jwtService.generateToken(loginRequestDto.getUsername());
 		}else {
 			throw new RuntimeException("Invalid user");
 		}
@@ -106,6 +117,8 @@ public class UserController {
 
 		}
 	}
+	
+	 
 
 
 
