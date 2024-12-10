@@ -1,0 +1,30 @@
+package com.Files.UserEntity.DTOs;
+
+import java.time.LocalDate;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SingleUserDto {
+	
+	     private long user_id;
+
+ 	    private String username;
+
+ 	    private String name;
+
+	   
+	    private LocalDate user_dob;
+
+	    private LocalDate user_reg_date;
+
+	   
+	    private String user_email;
+
+	  
+	    private String user_role;
+}

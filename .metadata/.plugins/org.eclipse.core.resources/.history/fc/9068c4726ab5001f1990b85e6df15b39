@@ -1,0 +1,5 @@
+package com.Files.UserEntity.DTOs;
+
+public class SingleUserDto {
+
+}

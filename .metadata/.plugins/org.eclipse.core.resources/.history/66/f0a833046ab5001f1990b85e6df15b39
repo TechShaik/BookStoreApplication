@@ -1,0 +1,16 @@
+package com.Files.UserEntity.Repos;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.Files.UserEntity.User;
+import com.Files.UserEntity.DTOs.UserResponseDTO;
+
+@Repository
+public interface UserRepo extends JpaRepository<User, Long>{
+
+	UserResponseDTO findByUsername(String username);
+
+	void deleteByUsername(String username);
+
+}

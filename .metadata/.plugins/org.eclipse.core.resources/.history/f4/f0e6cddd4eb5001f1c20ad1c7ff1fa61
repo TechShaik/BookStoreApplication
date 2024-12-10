@@ -1,0 +1,74 @@
+# Application Configuration
+spring.application.name=BookStoreGateway
+server.port=8089
+
+# Eureka Configuration
+eureka.client.register-with-eureka=true
+eureka.client.fetch-registry=true
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/
+
+# Gateway Routes
+spring.cloud.gateway.routes[0].id=book-services
+spring.cloud.gateway.routes[0].uri=lb://BOOK-SERVICES
+spring.cloud.gateway.routes[0].predicates[0]=Path=/books/**
+spring.cloud.gateway.routes[0].filters[0]=AuthenticationFilter
+spring.cloud.gateway.routes[0].filters[1].name=CircuitBreaker
+spring.cloud.gateway.routes[0].filters[1].args.name=defaultCircuitBreaker
+spring.cloud.gateway.routes[0].filters[1].args.fallbackuri=forward:/bookFallBack
+
+spring.cloud.gateway.routes[1].id=user-services
+spring.cloud.gateway.routes[1].uri=lb://USER-SERVICES
+spring.cloud.gateway.routes[1].predicates[0]=Path=/users/**
+spring.cloud.gateway.routes[1].filters[0]=AuthenticationFilter
+spring.cloud.gateway.routes[1].filters[1].name=CircuitBreaker
+spring.cloud.gateway.routes[1].filters[1].args.name=defaultCircuitBreaker
+spring.cloud.gateway.routes[1].filters[1].args.fallbackuri=forward:/userFallBack
+
+spring.cloud.gateway.routes[2].id=cart-services
+spring.cloud.gateway.routes[2].uri=lb://CART-SERVICES
+spring.cloud.gateway.routes[2].predicates[0]=Path=/cart/**
+spring.cloud.gateway.routes[2].filters[0]=AuthenticationFilter
+spring.cloud.gateway.routes[2].filters[1].name=CircuitBreaker
+spring.cloud.gateway.routes[2].filters[1].args.name=defaultCircuitBreaker
+spring.cloud.gateway.routes[2].filters[1].args.fallbackuri=forward:/cartFallback
+
+spring.cloud.gateway.routes[3].id=order-services
+spring.cloud.gateway.routes[3].uri=lb://ORDER-SERVICES
+spring.cloud.gateway.routes[3].predicates[0]=Path=/order/**
+spring.cloud.gateway.routes[3].filters[0]=AuthenticationFilter
+spring.cloud.gateway.routes[3].filters[1].name=CircuitBreaker
+spring.cloud.gateway.routes[3].filters[1].args.name=defaultCircuitBreaker
+spring.cloud.gateway.routes[3].filters[1].args.fallbackuri=forward:/orderFallBack
+
+# Logging Configuration
+logging.level.org.springframework.cloud.gateway=INFO
+logging.level.org.springframework.cloud.gateway.route.RouteDefinitionLocator=INFO
+logging.level.org.springframework.cloud.gateway=TRACE
+logging.level.org.springframework.cloud.gateway.support.WeightCalculatorFilter=WARN
+
+# Actuator Configuration
+management.endpoints.web.exposure.include=health,info,circuitbreakers
+management.endpoint.health.show-details=always
+management.health.circuitbreakers.enabled=true
+
+# Resilience4j Configuration
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.slidingWindowSize=10
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.minimumNumberOfCalls=3
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.permittedNumberOfCallsInHalfOpenState=3
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.waitDurationInOpenState=10s
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.failureRateThreshold=50
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.automatic-transition-from-open-to-half-open-enabled=true
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.sliding-window-type=count_based
+
+# Rate Limiter Configuration
+resilience4j.ratelimiter.instances.defaultCircuitBreaker.timeout=0
+resilience4j.ratelimiter.instances.defaultCircuitBreaker.limit-refresh-period=4
+resilience4j.ratelimiter.instances.defaultCircuitBreaker.limit-for-period=2
+
+# Retry Configuration
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.max-attempts=5
+resilience4j.circuitbreaker.instances.defaultCircuitBreaker.wait-duration=2s
+
+# Discovery Configuration
+spring.cloud.discovery.enabled=true
+spring.cloud.loadbalancer.enabled=true

@@ -1,0 +1,5 @@
+package com.files.BookStoreGateway.FallbackController;
+
+public class FallBackController {
+
+}

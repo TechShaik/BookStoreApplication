@@ -1,0 +1,55 @@
+package com.Files.UserEntity.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class LoggerFile {
+
+    private static final Logger log = LoggerFactory.getLogger(LoggerFile.class);
+
+    private final ObjectMapper objectMapper;
+
+    public LoggerFile() {
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+    }
+
+    @Pointcut(value = "execution(* com.Files.UserEntity..*(..))")
+    public void myPointCut() {
+    }
+
+    @Around("myPointCut()")
+    public Object applicationLogger(ProceedingJoinPoint pjp) throws Throwable {
+        String methodName = pjp.getSignature().getName();
+        String className = pjp.getTarget().getClass().toString();
+        Object[] array = pjp.getArgs();
+
+        try {
+            log.info("method invoked {} : {}() arguments : {}", className, methodName, objectMapper.writeValueAsString(array));
+        } catch (Exception e) {
+            log.warn("Error serializing arguments for {} : {}()", className, methodName, e);
+        }
+
+        Object object = pjp.proceed();
+
+        try {
+            log.info("{} : {}() Response : {}", className, methodName, objectMapper.writeValueAsString(object));
+        } catch (Exception e) {
+            log.warn("Error serializing response for {} : {}()", className, methodName, e);
+        }
+
+        return object;
+    }
+}
